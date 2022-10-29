@@ -107,14 +107,14 @@ export function HtmlBounce() {
   }, [renderFrame]);
 
   return (
-    <div>
+    <div id="container">
       <div id="controls">
         amount: {amount}
         <input type="range" min="25" step="25" max="2500" value={amount} onChange={(e) => {
           setAmount(Number(e.target.value));
         }} />
       </div>
-      <div className="container" ref={setContainerElement}>
+      <div className="ballContainer" ref={setContainerElement}>
         {balls.map((ball, index) => {
           return <Ball key={index} {...ball} />;
         })}
