@@ -1,0 +1,17 @@
+#controls {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 20px;
+}
+
+.container {
+  min-height: 100vh;
+}
+
+.ball {
+  background: red;
+  border-radius: 50%;
+  border: 1px solid black;
+
+  position: absolute;
+}
