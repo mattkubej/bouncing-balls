@@ -78,7 +78,6 @@ export function HtmlBounce() {
   const [balls, setBalls] = useState<IBall[]>([]);
 
   useEffect(() => {
-    console.log('running');
     if (!containerElement || balls.length === amount) return;
     const { clientHeight, clientWidth } = containerElement;
 
