@@ -2,6 +2,16 @@ import { useRef, useState, useEffect, useCallback } from "react";
 
 import "./HtmlBounce.css";
 
+const DEFAULT_BALL_AMOUNT = 25;
+const BALL_DIAMETER = 50;
+
+const MIN_BALLS = 25;
+const BALL_STEPS = 25;
+const MAX_BALLS = 2500;
+
+const SLOWEST_SPEED = 1;
+const FASTEST_SPEED = 5;
+
 interface IBall {
   diameter: number;
   x: number;
@@ -27,17 +37,25 @@ function randomSign() {
   return Math.sign(Math.random() - 0.5);
 }
 
+function randomNumberBetween(min: number, max: number) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function randomSpeed() {
+  return randomSign() * randomNumberBetween(SLOWEST_SPEED, FASTEST_SPEED);
+}
+
 function initializeBalls(
   containerHeight: number,
   containerWidth: number,
   amount: number = 1
 ): IBall[] {
   return new Array(amount).fill(0).map(() => ({
-    diameter: 50,
+    diameter: BALL_DIAMETER,
     x: Math.random() * containerWidth,
     y: Math.random() * containerHeight,
-    dx: randomSign() * Math.floor((Math.random() * 5) + 1),
-    dy: randomSign() * Math.floor((Math.random() * 5) + 1),
+    dx: randomSpeed(),
+    dy: randomSpeed(),
   }));
 }
 
@@ -74,7 +92,7 @@ export function HtmlBounce() {
 
   const animationFrameRequestRef = useRef<number | null>(null);
 
-  const [amount, setAmount] = useState(25);
+  const [amount, setAmount] = useState(DEFAULT_BALL_AMOUNT);
   const [balls, setBalls] = useState<IBall[]>([]);
 
   useEffect(() => {
@@ -106,13 +124,25 @@ export function HtmlBounce() {
     };
   }, [renderFrame]);
 
+  const handleChangeAmount = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setAmount(Number(e.target.value));
+    },
+    []
+  );
+
   return (
     <div id="container">
       <div id="controls">
         amount: {amount}
-        <input type="range" min="25" step="25" max="2500" value={amount} onChange={(e) => {
-          setAmount(Number(e.target.value));
-        }} />
+        <input
+          type="range"
+          min={MIN_BALLS}
+          step={BALL_STEPS}
+          max={MAX_BALLS}
+          value={amount}
+          onChange={handleChangeAmount}
+        />
       </div>
       <div className="ballContainer" ref={setContainerElement}>
         {balls.map((ball, index) => {
