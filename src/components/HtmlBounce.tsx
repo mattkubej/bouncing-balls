@@ -20,19 +20,6 @@ interface IBall {
   dy: number;
 }
 
-function Ball({ diameter, x, y }: IBall) {
-  return (
-    <div
-      className="ball"
-      style={{
-        width: diameter,
-        height: diameter,
-        transform: `translateX(${x}px) translateY(${y}px)`,
-      }}
-    ></div>
-  );
-}
-
 function randomSign() {
   return Math.sign(Math.random() - 0.5);
 }
@@ -89,6 +76,19 @@ function updateBall(
     x: ball.x + newDx,
     y: ball.y + newDy,
   };
+}
+
+function Ball({ diameter, x, y }: IBall) {
+  return (
+    <div
+      className="ball"
+      style={{
+        width: diameter,
+        height: diameter,
+        transform: `translateX(${x}px) translateY(${y}px)`,
+      }}
+    ></div>
+  );
 }
 
 export function HtmlBounce() {
