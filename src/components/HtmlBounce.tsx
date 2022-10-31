@@ -78,6 +78,40 @@ function updateBall(
   };
 }
 
+function useBouncingBalls(
+  containerElement: HTMLDivElement | null,
+  initBallAmount: number = DEFAULT_BALL_AMOUNT
+) {
+  const [ballAmount, setBallAmount] = useState(initBallAmount);
+  const [balls, setBalls] = useState<IBall[]>([]);
+
+  const init = useCallback(() => {
+    if (!containerElement || balls.length === ballAmount) return;
+    const { clientHeight, clientWidth } = containerElement;
+
+    setBalls(initializeBalls(clientHeight, clientWidth, ballAmount));
+  }, [containerElement, balls.length, ballAmount]);
+
+  const nextTick = useCallback(() => {
+    if (!containerElement) return;
+    const { clientHeight, clientWidth } = containerElement;
+
+    setBalls((prevState) => {
+      return prevState.map((ball) =>
+        updateBall(ball, clientHeight, clientWidth)
+      );
+    });
+  }, [containerElement]);
+
+  return {
+    init,
+    nextTick,
+    balls,
+    ballAmount,
+    setBallAmount,
+  };
+}
+
 function Ball({ diameter, x, y }: IBall) {
   return (
     <div
@@ -94,31 +128,20 @@ function Ball({ diameter, x, y }: IBall) {
 export function HtmlBounce() {
   const [containerElement, setContainerElement] =
     useState<HTMLDivElement | null>(null);
+  const { init, nextTick, balls, ballAmount, setBallAmount } =
+    useBouncingBalls(containerElement);
 
   const animationFrameRequestRef = useRef<number | null>(null);
 
-  const [amount, setAmount] = useState(DEFAULT_BALL_AMOUNT);
-  const [balls, setBalls] = useState<IBall[]>([]);
-
   useEffect(() => {
-    if (!containerElement || balls.length === amount) return;
-    const { clientHeight, clientWidth } = containerElement;
-
-    setBalls(initializeBalls(clientHeight, clientWidth, amount));
-  }, [containerElement, balls.length, amount]);
+    init();
+  }, [init]);
 
   const renderFrame = useCallback(() => {
-    if (!containerElement) return;
-    const { clientHeight, clientWidth } = containerElement;
-
-    setBalls((prevState) => {
-      return prevState.map((ball) =>
-        updateBall(ball, clientHeight, clientWidth)
-      );
-    });
+    nextTick();
 
     animationFrameRequestRef.current = requestAnimationFrame(renderFrame);
-  }, [containerElement]);
+  }, [nextTick]);
 
   useEffect(() => {
     animationFrameRequestRef.current = requestAnimationFrame(renderFrame);
@@ -131,21 +154,21 @@ export function HtmlBounce() {
 
   const handleChangeAmount = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      setAmount(Number(e.target.value));
+      setBallAmount(Number(e.target.value));
     },
-    []
+    [setBallAmount]
   );
 
   return (
     <div id="container">
       <div id="controls">
-        <span>amount: {amount}</span>
+        <span>amount: {ballAmount}</span>
         <input
           type="range"
           min={MIN_BALLS}
           step={BALL_STEPS}
           max={MAX_BALLS}
-          value={amount}
+          value={ballAmount}
           onChange={handleChangeAmount}
         />
       </div>
