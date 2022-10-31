@@ -9,8 +9,8 @@ const MIN_BALLS = 25;
 const BALL_STEPS = 25;
 const MAX_BALLS = 2500;
 
-const SLOWEST_SPEED = 1;
-const FASTEST_SPEED = 5;
+const SLOWEST_VELOCITY = 1;
+const FASTEST_VELOCITY = 5;
 
 interface IBall {
   diameter: number;
@@ -41,8 +41,8 @@ function randomNumberBetween(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function randomSpeed() {
-  return randomSign() * randomNumberBetween(SLOWEST_SPEED, FASTEST_SPEED);
+function randomVelocity() {
+  return randomSign() * randomNumberBetween(SLOWEST_VELOCITY, FASTEST_VELOCITY);
 }
 
 function initializeBalls(
@@ -54,9 +54,24 @@ function initializeBalls(
     diameter: BALL_DIAMETER,
     x: Math.random() * containerWidth,
     y: Math.random() * containerHeight,
-    dx: randomSpeed(),
-    dy: randomSpeed(),
+    dx: randomVelocity(),
+    dy: randomVelocity(),
   }));
+}
+
+function getVelocity(
+  position: number,
+  velocity: number,
+  ballDiameter: number,
+  borderPosition: number
+) {
+  const movingOutsideLowerBoundary = position <= 0 && velocity < 0;
+  const movingOutsideUpperBoundary =
+    position + ballDiameter >= borderPosition && velocity > 0;
+
+  return movingOutsideLowerBoundary || movingOutsideUpperBoundary
+    ? velocity * -1
+    : velocity;
 }
 
 function updateBall(
@@ -64,18 +79,8 @@ function updateBall(
   containerHeight: number,
   containerWidth: number
 ) {
-  const movingOutsideTop = ball.y <= 0 && ball.dy < 0;
-  const movingOutsideBottom =
-    ball.y + ball.diameter >= containerHeight && ball.dy > 0;
-
-  const movingOutsideLeft = ball.x <= 0 && ball.dx < 0;
-  const movingOutsideRight =
-    ball.x + ball.diameter >= containerWidth && ball.dx > 0;
-
-  const newDx =
-    movingOutsideLeft || movingOutsideRight ? ball.dx * -1 : ball.dx;
-  const newDy =
-    movingOutsideTop || movingOutsideBottom ? ball.dy * -1 : ball.dy;
+  const newDx = getVelocity(ball.x, ball.dx, ball.diameter, containerWidth);
+  const newDy = getVelocity(ball.y, ball.dy, ball.diameter, containerHeight);
 
   return {
     ...ball,
@@ -134,7 +139,7 @@ export function HtmlBounce() {
   return (
     <div id="container">
       <div id="controls">
-        amount: {amount}
+        <span>amount: {amount}</span>
         <input
           type="range"
           min={MIN_BALLS}
