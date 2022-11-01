@@ -1,11 +1,11 @@
 import './App.css';
 
-import {HtmlBounce} from './components';
+import {HtmlBounce, CanvasBounce} from './components';
 
 function App() {
   return (
     <div className="App">
-      <HtmlBounce />
+      <CanvasBounce />
     </div>
   );
 }
