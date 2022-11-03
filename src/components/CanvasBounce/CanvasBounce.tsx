@@ -6,6 +6,9 @@ const DEFAULT_BALL_AMOUNT = 25;
 const BALL_RADIUS = 25;
 const ENDING_ANGLE = 2 * Math.PI;
 
+const BALL_COLOR = 'red';
+const BALL_BORDER_COLOR = 'black';
+
 const MIN_BALLS = 25;
 const BALL_STEPS = 25;
 const MAX_BALLS = 2500;
@@ -94,11 +97,11 @@ function drawBall(canvasElement: HTMLCanvasElement, ball: IBall) {
   ctx.beginPath();
 
   ctx.arc(ball.x, ball.y, ball.radius, 0, ENDING_ANGLE);
-  ctx.fillStyle = 'red';
+  ctx.fillStyle = BALL_COLOR;
   ctx.fill();
 
   ctx.lineWidth = 1;
-  ctx.strokeStyle = 'black';
+  ctx.strokeStyle = BALL_BORDER_COLOR;
   ctx.stroke();
 }
 
