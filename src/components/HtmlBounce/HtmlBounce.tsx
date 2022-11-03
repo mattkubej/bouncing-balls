@@ -172,7 +172,7 @@ export function HtmlBounce() {
           onChange={handleChangeAmount}
         />
       </div>
-      <div className="ballContainer" ref={setContainerElement}>
+      <div id="ballContainer" ref={setContainerElement}>
         {balls.map((ball, index) => {
           return <Ball key={index} {...ball} />;
         })}

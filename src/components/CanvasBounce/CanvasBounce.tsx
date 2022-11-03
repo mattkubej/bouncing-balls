@@ -1,5 +1,7 @@
 import { useRef, useState, useEffect, useCallback } from "react";
 
+import './CanvasBounce.css';
+
 const DEFAULT_BALL_AMOUNT = 25;
 const BALL_RADIUS = 25;
 const ENDING_ANGLE = 2 * Math.PI;
@@ -204,7 +206,7 @@ export function CanvasBounce() {
           onChange={handleChangeAmount}
         />
       </div>
-      <div className="ballContainer" ref={setContainerElement}>
+      <div id="ballContainer" ref={setContainerElement}>
         <canvas ref={setCanvasElement}></canvas>
       </div>
     </div>
