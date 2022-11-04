@@ -117,7 +117,7 @@ function useBouncingBalls(
     const { height, width } = canvasElement;
 
     balls.current = initializeBalls(height, width, ballAmount);
-  }, [canvasElement, balls.current, ballAmount]);
+  }, [canvasElement, ballAmount]);
 
   const nextTick = useCallback(() => {
     if (!canvasElement) return;
