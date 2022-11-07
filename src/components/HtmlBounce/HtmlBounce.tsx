@@ -1,6 +1,6 @@
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState, useEffect, useCallback } from 'react';
 
-import "./HtmlBounce.css";
+import './HtmlBounce.css';
 
 const DEFAULT_BALL_AMOUNT = 25;
 const BALL_DIAMETER = 50;

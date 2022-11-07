@@ -1,1 +1,1 @@
-export {HtmlBounce} from './HtmlBounce';
+export { HtmlBounce } from './HtmlBounce';

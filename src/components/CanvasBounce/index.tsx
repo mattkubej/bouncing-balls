@@ -1,1 +1,1 @@
-export {CanvasBounce} from './CanvasBounce';
+export { CanvasBounce } from './CanvasBounce';

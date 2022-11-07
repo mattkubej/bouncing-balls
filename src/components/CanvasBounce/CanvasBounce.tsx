@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState, useEffect, useCallback } from 'react';
 
 import './CanvasBounce.css';
 
@@ -107,7 +107,7 @@ function drawBall(canvasElement: HTMLCanvasElement, ball: IBall) {
 
 function useBouncingBalls(
   canvasElement: HTMLCanvasElement | null,
-  initBallAmount: number = DEFAULT_BALL_AMOUNT,
+  initBallAmount: number = DEFAULT_BALL_AMOUNT
 ) {
   const [ballAmount, setBallAmount] = useState(initBallAmount);
   const balls = useRef<IBall[]>([]);
@@ -126,7 +126,7 @@ function useBouncingBalls(
     clearCanvas(canvasElement);
 
     balls.current = balls.current.map((ball) => {
-      const nextBall = updateBall(ball, height, width)
+      const nextBall = updateBall(ball, height, width);
 
       drawBall(canvasElement, ball);
 
@@ -143,9 +143,11 @@ function useBouncingBalls(
 }
 
 export function CanvasBounce() {
-  const [containerElement, setContainerElement] = useState<HTMLDivElement | null>(null);
-  const [canvasElement, setCanvasElement] =
-    useState<HTMLCanvasElement | null>(null);
+  const [containerElement, setContainerElement] =
+    useState<HTMLDivElement | null>(null);
+  const [canvasElement, setCanvasElement] = useState<HTMLCanvasElement | null>(
+    null
+  );
 
   const { init, nextTick, ballAmount, setBallAmount } =
     useBouncingBalls(canvasElement);
