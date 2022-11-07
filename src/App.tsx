@@ -1,12 +1,12 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { HtmlBounce, CanvasBounce } from "./components";
+import { Root, HtmlBounce, CanvasBounce } from "./components";
 
 import "./App.css";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <div>test</div>
+    element: <Root />
   },
   {
     path: "/html-bounce",
