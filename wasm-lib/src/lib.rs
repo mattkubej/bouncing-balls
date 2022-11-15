@@ -63,6 +63,7 @@ impl BouncingBalls {
             .dyn_into::<web_sys::CanvasRenderingContext2d>()
             .unwrap();
 
+        context.clear_rect(0.0, 0.0, canvas.width() as f64, canvas.height() as f64);
 
         for ball in self.balls.iter() {
             context.begin_path();

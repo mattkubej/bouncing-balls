@@ -2,20 +2,34 @@ import { useRef, useState, useEffect, useCallback } from 'react';
 
 import { BouncingBalls } from 'wasm-lib';
 
-const MIN_BALLS = 25;
-const BALL_STEPS = 25;
-const MAX_BALLS = 2500;
+const MIN_BALLS = 1;
+const BALL_STEPS = 1;
+const MAX_BALLS = 25;
 
-function useBouncingBalls({ amount }: { amount: number }) {
+function useBouncingBalls({ defaultAmount }: { defaultAmount: number }) {
   const [bouncingBalls] = useState<BouncingBalls>(
-    () => new BouncingBalls(amount)
+    () => new BouncingBalls(defaultAmount)
   );
+
+  const [amount, setAmount] = useState(defaultAmount);
 
   useEffect(() => {
     bouncingBalls.init_balls();
   }, [bouncingBalls]);
 
-  return bouncingBalls;
+  const setBallAmount = useCallback(
+    (ballAmount: number) => {
+      setAmount(ballAmount);
+      bouncingBalls.set_amount(ballAmount);
+    },
+    [bouncingBalls]
+  );
+
+  return {
+    bouncingBalls,
+    ballAmount: amount,
+    setBallAmount,
+  };
 }
 
 export function WasmBounce() {
@@ -25,8 +39,8 @@ export function WasmBounce() {
     null
   );
 
-  const bouncingBalls = useBouncingBalls({
-    amount: 1,
+  const { bouncingBalls, ballAmount, setBallAmount } = useBouncingBalls({
+    defaultAmount: 1,
   });
 
   const animationFrameRequestRef = useRef<number | null>(null);
@@ -68,21 +82,21 @@ export function WasmBounce() {
 
   const handleChangeAmount = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      bouncingBalls.set_amount(Number(e.target.value));
+      setBallAmount(Number(e.target.value));
     },
-    [bouncingBalls]
+    [setBallAmount]
   );
 
   return (
     <div id="container">
       <div id="controls">
-        <span>amount: {1}</span>
+        <span>amount: {ballAmount}</span>
         <input
           type="range"
           min={MIN_BALLS}
           step={BALL_STEPS}
           max={MAX_BALLS}
-          value={1}
+          value={ballAmount}
           onChange={handleChangeAmount}
         />
       </div>
