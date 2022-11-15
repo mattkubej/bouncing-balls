@@ -11,6 +11,9 @@ export function Root() {
           <li>
             <a href="/canvas-bounce">Canvas Bounce</a>
           </li>
+          <li>
+            <a href="/wasm-bounce">Wasm Bounce</a>
+          </li>
         </ul>
       </nav>
     </div>
