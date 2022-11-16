@@ -6,19 +6,32 @@ const MIN_BALLS = 1;
 const BALL_STEPS = 1;
 const MAX_BALLS = 25;
 
-function useBouncingBalls({ defaultAmount }: { defaultAmount: number }) {
-  const [bouncingBalls] = useState<BouncingBalls>(
-    () => new BouncingBalls(defaultAmount)
+function useBouncingBalls({
+  defaultAmount,
+  canvasElement,
+}: {
+  defaultAmount: number;
+  canvasElement: HTMLCanvasElement | null;
+}) {
+  const [bouncingBalls, setBouncingBalls] = useState<BouncingBalls | null>(
+    null
   );
 
   const [amount, setAmount] = useState(defaultAmount);
 
   useEffect(() => {
-    bouncingBalls.init_balls();
-  }, [bouncingBalls]);
+    if (!canvasElement) return;
+
+    const instance = new BouncingBalls(defaultAmount, canvasElement);
+    instance.init_balls();
+
+    setBouncingBalls(instance);
+  }, [canvasElement, defaultAmount]);
 
   const setBallAmount = useCallback(
     (ballAmount: number) => {
+      if (!bouncingBalls) return;
+
       setAmount(ballAmount);
       bouncingBalls.set_amount(ballAmount);
     },
@@ -39,12 +52,6 @@ export function WasmBounce() {
     null
   );
 
-  const { bouncingBalls, ballAmount, setBallAmount } = useBouncingBalls({
-    defaultAmount: 1,
-  });
-
-  const animationFrameRequestRef = useRef<number | null>(null);
-
   useEffect(() => {
     if (!containerElement || !canvasElement) return;
 
@@ -63,13 +70,18 @@ export function WasmBounce() {
     };
   }, [containerElement, canvasElement]);
 
-  const renderFrame = useCallback(() => {
-    if (!canvasElement) return;
+  const { bouncingBalls, ballAmount, setBallAmount } = useBouncingBalls({
+    defaultAmount: 1,
+    canvasElement,
+  });
 
-    bouncingBalls.draw(canvasElement);
+  const animationFrameRequestRef = useRef<number | null>(null);
+
+  const renderFrame = useCallback(() => {
+    bouncingBalls?.draw();
 
     animationFrameRequestRef.current = requestAnimationFrame(renderFrame);
-  }, [canvasElement, bouncingBalls]);
+  }, [bouncingBalls]);
 
   useEffect(() => {
     animationFrameRequestRef.current = requestAnimationFrame(renderFrame);
