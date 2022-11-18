@@ -2,9 +2,9 @@ import { useRef, useState, useEffect, useCallback } from 'react';
 
 import { BouncingBalls } from 'wasm-lib';
 
-const MIN_BALLS = 1;
-const BALL_STEPS = 1;
-const MAX_BALLS = 25;
+const MIN_BALLS = 25;
+const BALL_STEPS = 25;
+const MAX_BALLS = 2500;
 
 function useBouncingBalls({
   defaultAmount,
