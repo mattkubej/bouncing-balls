@@ -23,13 +23,13 @@ struct Ball {
 }
 
 impl Ball {
-    pub fn new(x: f64, y: f64) -> Ball {
+    pub fn new(x: f64, y: f64, dx: f64, dy: f64) -> Ball {
         Ball {
             radius: 25.0,
             x,
             y,
-            dx: random_velocity(),
-            dy: random_velocity(),
+            dx,
+            dy,
         }
     }
 }
@@ -83,7 +83,7 @@ impl BouncingBalls {
             let x = rng.gen_range(ball_radius..(canvas_width - ball_radius));
             let y = rng.gen_range(ball_radius..(canvas_height - ball_radius));
 
-            self.balls.push(Ball::new(x, y))
+            self.balls.push(Ball::new(x, y, random_velocity(), random_velocity()))
         }
     }
 
