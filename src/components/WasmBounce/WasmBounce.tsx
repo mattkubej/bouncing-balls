@@ -1,4 +1,5 @@
-import { useRef, useState, useEffect, useCallback } from 'react';
+import { useRef, useState, useEffect, useCallback, useMemo } from 'react';
+import { debounce } from 'lodash';
 
 import { BouncingBalls } from 'wasm-lib';
 
@@ -30,14 +31,18 @@ function useBouncingBalls({
     })();
   }, [canvasElement, defaultAmount]);
 
+  const debouncedSetAmount = useMemo(() => {
+    return debounce((amount) => {
+      bouncingBalls?.set_amount(amount);
+    }, 250);
+  }, [bouncingBalls]);
+
   const setBallAmount = useCallback(
     (ballAmount: number) => {
-      if (!bouncingBalls) return;
-
       setAmount(ballAmount);
-      bouncingBalls.set_amount(ballAmount);
+      debouncedSetAmount(ballAmount);
     },
-    [bouncingBalls]
+    [debouncedSetAmount]
   );
 
   return {
@@ -73,7 +78,7 @@ export function WasmBounce() {
   }, [containerElement, canvasElement]);
 
   const { bouncingBalls, ballAmount, setBallAmount } = useBouncingBalls({
-    defaultAmount: 1,
+    defaultAmount: MIN_BALLS,
     canvasElement,
   });
 

@@ -198,6 +198,8 @@ export function CanvasBounce() {
     [setBallAmount]
   );
 
+  console.log(ballAmount);
+
   return (
     <div id="container">
       <div id="controls">

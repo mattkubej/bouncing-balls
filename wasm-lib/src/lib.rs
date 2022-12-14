@@ -1,4 +1,5 @@
 use rand::Rng;
+use rand::rngs::ThreadRng;
 use std::f64;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
@@ -7,9 +8,7 @@ use web_sys::HtmlCanvasElement;
 const SLOWEST_VELOCITY: f64 = 1.0;
 const FASTEST_VELOCITY: f64 = 5.0;
 
-pub fn random_velocity() -> f64 {
-    let mut rng = rand::thread_rng();
-
+pub fn random_velocity(rng: &mut ThreadRng) -> f64 {
     let sign = num::signum((rng.gen_range(0.0..1.0) - 0.5) as f64);
     rng.gen_range(SLOWEST_VELOCITY..FASTEST_VELOCITY) * sign
 }
@@ -83,7 +82,7 @@ impl BouncingBalls {
             let x = rng.gen_range(ball_radius..(canvas_width - ball_radius));
             let y = rng.gen_range(ball_radius..(canvas_height - ball_radius));
 
-            self.balls.push(Ball::new(x, y, random_velocity(), random_velocity()))
+            self.balls.push(Ball::new(x, y, random_velocity(&mut rng), random_velocity(&mut rng)))
         }
     }
 
