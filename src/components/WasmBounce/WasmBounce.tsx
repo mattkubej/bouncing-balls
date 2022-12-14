@@ -13,19 +13,21 @@ function useBouncingBalls({
   defaultAmount: number;
   canvasElement: HTMLCanvasElement | null;
 }) {
+  const [amount, setAmount] = useState(defaultAmount);
   const [bouncingBalls, setBouncingBalls] = useState<BouncingBalls | null>(
     null
   );
 
-  const [amount, setAmount] = useState(defaultAmount);
-
   useEffect(() => {
     if (!canvasElement) return;
 
-    const instance = new BouncingBalls(defaultAmount, canvasElement);
-    instance.init_balls();
+    (async function () {
+      const { BouncingBalls } = await import('wasm-lib');
+      const instance = new BouncingBalls(defaultAmount, canvasElement);
+      instance.init_balls();
 
-    setBouncingBalls(instance);
+      setBouncingBalls(instance);
+    })();
   }, [canvasElement, defaultAmount]);
 
   const setBallAmount = useCallback(
